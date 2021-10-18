@@ -1,0 +1,44 @@
+select seçim alanları değerlerinin alınması 
+
+    $(".form").append('<select name="filter[]"><option value="MAKINAADI">MAKINA ADI</option><option value="MAKSASENO">Makina Şase No</option><option value="ORDERNUM">İş Emri No</option><option value="ACIKLAMALAR">Açıklamalar</option></select><input name="value[]"><br />');
+
+
+Select seçim alanlarından seçilen alana göre filtreleme kodu
+	$filter = $_POST["filter"];
+	$value = $_POST["value"];
+	for ($i=0; $i<sizeof($_POST["filter"]); $i++)
+	{	
+		//echo $value[$i];
+		select sorgusu bu şekilde 
+		$result = oci_parse($ORACLEabcconnection, "SELECT * FROM HAKMONTAJ WHERE ".$filter[$i]."='".$value[$i]."'");
+		oci_execute($result);
+
+		alanların tablosunu oluşturması için kullanılan kod
+		while($breakdowns = oci_fetch_array($result, OCI_ASSOC+OCI_RETURN_NULLS))
+					{
+						echo '<table class="table" width="100%" border="0" cellspacing="0" cellpadding="5">
+									<tbody>
+										<tr>';
+						foreach ($breakdowns as $key => $value)
+						{
+							
+							echo '<td>'.$key.'</td>';
+									
+						}
+
+						echo '</tr><tr>';
+
+						foreach ($breakdowns as $key => $value)
+						{
+
+							
+							echo '<td>'.$value.'</td>';
+										
+
+						}
+
+						echo '</tr></tbody>
+									</table>';
+						
+					}
+	}
